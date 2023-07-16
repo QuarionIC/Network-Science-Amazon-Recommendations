@@ -11,20 +11,28 @@ import pandas as pd
 import random
 import itertools
 from scipy.optimize import curve_fit
-
 full=pd.read_csv("com-Amazon.csv", delimiter = " ")
 
-counter=0
-observed=[]
-not_observed=[]
-for i in full:
-  if counter == 5:
-    not_observed.append(i)
-    counter= 0
-  else:
-    observed.append(i)
-    counter+=1
+
+unobserved=full.iloc[::5,:]
+observed=full.iloc[full.index %5 !=0]
     
 
-df_edges = observed
-G = nx.from_pandas_edgelist(df_edges, source="From", target="To")
+
+
+G = nx.from_pandas_edgelist(observed, source="From", target="To")
+G1 =nx.from_pandas_edgelist(unobserved, source="From", target="To")
+
+
+prediction = list(G1.edges())[1:5]  #test: we know these to be true
+prediction.append((8,2)) #test: we know to be false
+
+success=0
+failure=0
+for i in prediction:
+  if i in list(G1.edges()):
+    success+=1
+  else:
+    failure+=1
+
+print("success rate:",success/(success+failure),"failure rate:", failure/(success+failure))
