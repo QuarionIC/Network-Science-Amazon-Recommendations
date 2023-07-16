@@ -26,5 +26,5 @@ for i in full:
     counter+=1
     
 
-#df_edges = pd.read_csv("com-Amazon.csv", delimiter = " ")
-#G = nx.from_pandas_edgelist(df_edges, source="From", target="To")
+df_edges = observed
+G = nx.from_pandas_edgelist(df_edges, source="From", target="To")
