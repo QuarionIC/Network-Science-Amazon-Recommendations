@@ -12,5 +12,19 @@ import random
 import itertools
 from scipy.optimize import curve_fit
 
-df_edges = pd.read_csv("com-Amazon.csv", delimiter = " ")
-G = nx.from_pandas_edgelist(df_edges, source="From", target="To")
+full=pd.read_csv("com-Amazon.csv", delimiter = " ")
+
+counter=0
+observed=[]
+not_observed=[]
+for i in full:
+  if counter == 5:
+    not_observed.append(i)
+    counter= 0
+  else:
+    observed.append(i)
+    counter+=1
+    
+
+#df_edges = pd.read_csv("com-Amazon.csv", delimiter = " ")
+#G = nx.from_pandas_edgelist(df_edges, source="From", target="To")
