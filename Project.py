@@ -14,3 +14,5 @@ from scipy.optimize import curve_fit
 
 df_edges = pd.read_csv("com-Amazon.csv", delimiter = " ")
 G = nx.from_pandas_edgelist(df_edges, source="From", target="To")
+
+# wehwrherher
