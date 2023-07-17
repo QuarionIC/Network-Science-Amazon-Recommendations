@@ -4,35 +4,53 @@ Created on Fri Jul 14 09:47:07 2023
 
 @author: motqu
 """
-import networkx as nx
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-import random
-import itertools
-from scipy.optimize import curve_fit
-full=pd.read_csv("com-Amazon.csv", delimiter = " ")
+import os
+os.chdir("Folders\ISYE 4803 - NET\Project\Data Sets\Copurchasing Metadata") 
 
+import os
+#os.chdir("Folders\ISYE 4803 - NET\Project\Data Sets\Copurchasing Metadata") 
 
-unobserved=full.iloc[::5,:]
-observed=full.iloc[full.index %5 !=0]
-    
+file = open("amazon-meta.txt",encoding="utf8")
+file = file.readlines()
+import re
 
-
-
-G = nx.from_pandas_edgelist(observed, source="From", target="To")
-G1 =nx.from_pandas_edgelist(unobserved, source="From", target="To")
-
-
-prediction = list(G1.edges())[1:5]  #test: we know these to be true
-prediction.append((8,2)) #test: we know to be false
-
-success=0
-failure=0
-for i in prediction:
-  if i in list(G1.edges()):
-    success+=1
-  else:
-    failure+=1
-
-print("success rate:",success/(success+failure),"failure rate:", failure/(success+failure))
+products={}
+customers={}
+initialend=0
+temp=[]
+for i in range(len(file)):
+    if "Id:" in file[i]:
+        temp.append(file[initialend:i])
+        initialend=i
+reviews_name=["date",'customer', 'rating', 'votes', 'helpful']
+print(len(temp))
+for j in temp[450000:]:
+    temp={}
+    prod_reviews=[]
+    for k in j:
+        if "ASIN:" in k:
+            asin=k.split()[1]
+        if "title:" in k:
+            temp["title"]=k[len("title:  "):-len("\n")].strip()
+        if "group:" in k:
+            temp["group"]=k[len("group:   "):-len("\n")].strip()
+        if "salesrank:" in k:
+            temp["salesrank"]=k[len("salesrank:  "):-len("\n")].strip()
+        if "similar" in k:
+            temp["similar"]=k.split()[2:]
+        ##not sure how to approach categories
+        date=[]
+        date=re.findall(r"\d{4}-\d\d?-\d\d?",k)
+        if date != []:
+            review_values=k.split()[::2]
+            review={}
+            for j in range(5):
+                review[reviews_name[j]]=review_values[j]
+            prod_reviews.append(review)
+            if review["customer"] not in customers:
+                customers[review["customer"]]=[]
+            customers[review["customer"]].append({"product":asin,"date":review["date"],"rating":review["rating"],"votes":review["votes"],"helpful":review["helpful"]})
+    if prod_reviews!=[]:
+        temp["reviews"]=prod_reviews
+    if temp !={}:
+        products[asin]=temp
