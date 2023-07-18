@@ -54,6 +54,7 @@ print(len(customers.keys()))
 
 
 import itertools
+import networkx
 
 edges=[]
 for c in customers:
@@ -62,10 +63,36 @@ for c in customers:
             if t[0]!=t[1]:
                 edges.append(t)
 
-import networkx as nx
+
 g = nx.Graph()
 g.add_edges_from(edges)
-print("edge count:", len(g.edges()), "node count:", len(g.nodes()) )
+
+
+observed=list(g.edges())
+
+unobserved=observed[::5]
+del observed[::5]
+
+G_obs = nx.Graph()
+G_obs.add_edges_from(observed)
+G_nobs = nx.Graph()
+G_nobs.add_edges_from(unobserved)
+
+
+jacard = nx.jaccard_coefficient(G_obs)
+
+threshold_probability =.5
+
+success=0
+failure=0
+true=[]
+for u, v, p in jacard:
+  if p >= threshold_probability:
+    if ((u,v)) in G_nobs.edges():
+      true.append(p)
+      success+=1
+    else:
+      failure+=1
 
 print(nx.average_clustering(g))
 
