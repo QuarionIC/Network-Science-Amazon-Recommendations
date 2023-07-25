@@ -6,7 +6,7 @@
 1. Unzip the files.
 2. Run Project_ISYE4803.ipynb or project_isye4803.py from top to botom.
 
-## The following libraries are used:
+## The following libraries are use:
 1. NetworkX
 2. Matplotlib
 3. Numpy
