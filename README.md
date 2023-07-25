@@ -4,4 +4,4 @@
 
 ## If you want to run the code:
 1. Unzip the files.
-2. Run Project_ISYE4803.ipynb or project_isye4803.py
+2. Run Project_ISYE4803.ipynb or project_isye4803.py from top to botom.
